@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan 3D</title>
+    
+    <!-- Mengambil Font Romantis dari Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Mengambil Library 3D (Three.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Pengaturan Dasar */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #1a1a2e; /* Warna latar belakang gelap elegan */
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Tempat Background 3D */
+        #bg-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Memastikan 3D ada di belakang teks */
+        }
+
+        /* Kontainer Utama */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+            z-index: 1;
+        }
+
+        /* Efek Kotak Kaca Transparan (Glassmorphism) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Tipografi */
+        h1.nama-pasangan {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #d4af37; /* Warna Emas */
+            margin: 10px 0;
+        }
+        h2 { font-weight: 300; font-size: 1.2rem; letter-spacing: 2px;}
+        p { line-height: 1.6; }
+        
+        /* Foto Pasangan */
+        .foto-pasangan {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid #d4af37;
+        }
+        
+        /* Tombol */
+        .btn {
+            background-color: #d4af37;
+            color: #1a1a2e;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn:hover { background-color: #f1c40f; }
+    </style>
+</head>
+<body>
+
+    <!-- Area Background 3D Cincin -->
+    <div id="bg-3d"></div>
+
+    <!-- Area Konten Undangan yang bisa Anda Edit -->
+    <div class="container">
+        
+        <!-- Bagian Pembuka -->
+        <div class="glass-card">
+            <h2>THE WEDDING OF</h2>
+            <!-- UBAH NAMA DI SINI -->
+            <h1 class="nama-pasangan">Romeo & Juliet</h1>
+            <p>Kami mengundang Anda untuk merayakan hari paling bahagia dalam hidup kami.</p>
+        </div>
+
+        <!-- Bagian Foto & Tanggal -->
+        <div class="glass-card">
+            <h2>SAVE THE DATE</h2>
+            <!-- UBAH TANGGAL DI SINI -->
+            <p><strong>Minggu, 12 Desember 2026</strong><br>Pukul 09.00 WIB - Selesai</p>
+            
+            <!-- UBAH NAMA FILE FOTO DI SINI -->
+            <img src="foto-kita.jpg" alt="Foto Pasangan" class="foto-pasangan">
+        </div>
+
+        <!-- Bagian Lokasi -->
+        <div class="glass-card">
+            <h2>LOKASI ACARA</h2>
+            <!-- UBAH LOKASI DI SINI -->
+            <p><strong>Gedung Pertemuan Indah</strong><br>Jl. Sudirman No. 123, Jakarta</p>
+            <a href="https://maps.google.com" target="_blank" class="btn">Buka di Google Maps</a>
+        </div>
+
+    </div>
+
+    <!-- Script untuk membuat Animasi 3D Cincin -->
+    <script>
+        // 1. Setup Scene, Kamera, dan Layar
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); // alpha: true agar background transparan
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('bg-3d').appendChild(renderer.domElement);
+
+        // 2. Membuat Objek 3D (Bentuk Cincin / Torus)
+        const geometry = new THREE.TorusGeometry(3, 0.3, 30, 200);
+        const material = new THREE.MeshStandardMaterial({ 
+            color: 0xd4af37, // Warna Emas
+            metalness: 0.7, 
+            roughness: 0.2 
+        });
+
+        const cincin1 = new THREE.Mesh(geometry, material);
+        scene.add(cincin1);
+
+        const cincin2 = new THREE.Mesh(geometry, material);
+        cincin2.position.x = 2.5; // Menggeser cincin kedua agar bertumpuk
+        scene.add(cincin2);
+
+        // 3. Pencahayaan agar terlihat nyata (3D)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const pointLight = new THREE.PointLight(0xffffff, 1);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+
+        camera.position.z = 10;
+
+        // 4. Fungsi untuk memutar cincin (Animasi)
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Kecepatan putaran cincin
+            cincin1.rotation.x += 0.005;
+            cincin1.rotation.y += 0.01;
+            
+            cincin2.rotation.x -= 0.005;
+            cincin2.rotation.y -= 0.01;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 5. Agar 3D responsif jika ukuran layar HP/Laptop berubah
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
